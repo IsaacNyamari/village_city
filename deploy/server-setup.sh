@@ -7,6 +7,7 @@ DOMAIN="${DOMAIN:-_}"
 DB_NAME=village_city
 DB_USER=village_city
 PHP_V=8.4   # composer.lock needs PHP >= 8.4.1
+PHP=/usr/bin/php$PHP_V   # used explicitly so other sites' default PHP is left alone
 
 apt-get update
 apt-get install -y software-properties-common ca-certificates lsb-release curl unzip git nginx
@@ -14,7 +15,6 @@ add-apt-repository -y ppa:ondrej/php
 apt-get update
 apt-get install -y php$PHP_V-fpm php$PHP_V-cli php$PHP_V-mysql php$PHP_V-mbstring php$PHP_V-xml \
   php$PHP_V-curl php$PHP_V-zip php$PHP_V-bcmath php$PHP_V-intl
-update-alternatives --set php /usr/bin/php$PHP_V
 
 # Never replace an existing database server: only install MariaDB if no MySQL/MariaDB is present.
 if ! command -v mysqld >/dev/null && ! command -v mariadbd >/dev/null; then
@@ -22,7 +22,7 @@ if ! command -v mysqld >/dev/null && ! command -v mariadbd >/dev/null; then
 fi
 systemctl enable --now mariadb 2>/dev/null || systemctl enable --now mysql
 command -v composer >/dev/null || \
-  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  curl -sS https://getcomposer.org/installer | $PHP -- --install-dir=/usr/local/bin --filename=composer
 
 REPO="${REPO:-https://github.com/IsaacNyamari/village_city.git}"
 BRANCH="${BRANCH:-main}"
@@ -55,10 +55,10 @@ if [ ! -f .env ]; then
     -e "s|^# *DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" \
     -e "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" -e "s|^DB_USERNAME=.*|DB_USERNAME=$DB_USER|" \
     -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env
-  composer install --no-dev -o --no-interaction
-  php artisan key:generate --force
+  $PHP /usr/local/bin/composer install --no-dev -o --no-interaction
+  $PHP artisan key:generate --force
 else
-  composer install --no-dev -o --no-interaction
+  $PHP /usr/local/bin/composer install --no-dev -o --no-interaction
 fi
 
 # front-end assets (public/build is not in git)
@@ -66,17 +66,17 @@ command -v node >/dev/null || { curl -fsSL https://deb.nodesource.com/setup_20.x
 npm ci && npm run build
 
 mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache
-php artisan migrate --force --seed
-php artisan storage:link || true
-php artisan optimize:clear
-php artisan config:cache && php artisan route:cache && php artisan view:cache
+$PHP artisan migrate --force --seed
+$PHP artisan storage:link || true
+$PHP artisan optimize:clear
+$PHP artisan config:cache && php artisan route:cache && php artisan view:cache
 
 chown -R www-data:www-data "$APP_DIR"
 chmod -R ug+rwX storage bootstrap/cache
 
 cat > /etc/nginx/sites-available/village_city <<NGINX
 server {
-    listen 80 default_server;
+    listen 80;
     server_name $DOMAIN;
     root $APP_DIR/public;
     index index.php;
@@ -90,9 +90,8 @@ server {
 }
 NGINX
 ln -sf /etc/nginx/sites-available/village_city /etc/nginx/sites-enabled/village_city
-rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
-systemctl restart "php$PHP_V-fpm"
+systemctl reload "php$PHP_V-fpm"
 
 # Queue worker (QUEUE_CONNECTION=database)
 cat > /etc/systemd/system/village-queue.service <<UNIT
@@ -102,7 +101,7 @@ After=mariadb.service
 [Service]
 User=www-data
 Restart=always
-ExecStart=/usr/bin/php $APP_DIR/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+ExecStart=$PHP $APP_DIR/artisan queue:work --sleep=3 --tries=3 --max-time=3600
 [Install]
 WantedBy=multi-user.target
 UNIT
