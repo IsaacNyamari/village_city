@@ -56,10 +56,12 @@ if [ ! -f .env ]; then
     -e "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" -e "s|^DB_USERNAME=.*|DB_USERNAME=$DB_USER|" \
     -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env
   $PHP /usr/local/bin/composer install --no-dev -o --no-interaction
-  $PHP artisan key:generate --force
 else
   $PHP /usr/local/bin/composer install --no-dev -o --no-interaction
 fi
+
+# generate APP_KEY if missing (safe on re-runs)
+grep -qE "^APP_KEY=.+" .env || $PHP artisan key:generate --force
 
 # front-end assets (public/build is not in git)
 command -v node >/dev/null || { curl -fsSL https://deb.nodesource.com/setup_20.x | bash - ; apt-get install -y nodejs; }
