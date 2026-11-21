@@ -69,7 +69,7 @@ mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/ca
 $PHP artisan migrate --force --seed
 $PHP artisan storage:link || true
 $PHP artisan optimize:clear
-$PHP artisan config:cache && php artisan route:cache && php artisan view:cache
+$PHP artisan config:cache && $PHP artisan route:cache && $PHP artisan view:cache
 
 chown -R www-data:www-data "$APP_DIR"
 chmod -R ug+rwX storage bootstrap/cache
