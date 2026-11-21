@@ -1,0 +1,152 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source "../views";
+@source "../../app/Livewire";
+@source "../../app/Support";
+@source "../../app/Enums";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f4;
+    --color-zinc-200: #e7e5e4;
+    --color-zinc-300: #d6d3d1;
+    --color-zinc-400: #a8a29e;
+    --color-zinc-500: #78716c;
+    --color-zinc-600: #57534e;
+    --color-zinc-700: #44403c;
+    --color-zinc-800: #292524;
+    --color-zinc-900: #1c1917;
+    --color-zinc-950: #0c0a09;
+
+    /* Village City brand: deep forest green, fresh green, warm agricultural gold */
+    --color-forest-50: #f1f8f3;
+    --color-forest-100: #dcefe1;
+    --color-forest-200: #bbdfc6;
+    --color-forest-300: #8dc8a2;
+    --color-forest-400: #5aab79;
+    --color-forest-500: #388f5c;
+    --color-forest-600: #277348;
+    --color-forest-700: #1f5c3b;
+    --color-forest-800: #1a4a31;
+    --color-forest-900: #133726;
+    --color-forest-950: #0b2318;
+
+    --color-gold-100: #fbf0cf;
+    --color-gold-300: #f0cf6e;
+    --color-gold-400: #e6b93f;
+    --color-gold-500: #d4a017;
+    --color-gold-600: #b07f0f;
+
+    --color-accent: var(--color-forest-700);
+    --color-accent-content: var(--color-forest-700);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    /* The sidebar is the only dark surface: it scopes Flux's dark styles to itself. */
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-gold-300);
+        --color-accent-foreground: var(--color-forest-900);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field] {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+
+/* Cart feedback */
+@keyframes vc-pop {
+    0% { transform: scale(0.6); }
+    60% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+.vc-pop {
+    animation: vc-pop 0.35s ease-out;
+}
+
+@keyframes vc-check {
+    from { stroke-dashoffset: 24; }
+    to { stroke-dashoffset: 0; }
+}
+
+.vc-check path {
+    stroke-dasharray: 24;
+    animation: vc-check 0.5s ease-out forwards;
+}
+
+@keyframes vc-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.vc-rise {
+    animation: vc-rise 0.45s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vc-pop, .vc-check path, .vc-rise { animation: none; }
+}
+
+/* Rendered documentation (Help & Documentation) */
+.prose-vc { color: var(--color-zinc-700); font-size: 0.9375rem; line-height: 1.7; max-width: 76ch; }
+.prose-vc > :first-child { margin-top: 0; }
+.prose-vc h1 { font-size: 1.75rem; font-weight: 700; color: var(--color-zinc-900); margin: 0 0 1rem; letter-spacing: -0.01em; }
+.prose-vc h2 { font-size: 1.35rem; font-weight: 650; color: var(--color-forest-900); margin: 2.25rem 0 0.75rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--color-zinc-200); scroll-margin-top: 6rem; }
+.prose-vc h3 { font-size: 1.05rem; font-weight: 650; color: var(--color-zinc-900); margin: 1.5rem 0 0.5rem; scroll-margin-top: 6rem; }
+.prose-vc h4 { font-weight: 650; margin: 1.25rem 0 0.4rem; }
+.prose-vc p { margin: 0.75rem 0; }
+.prose-vc ul { list-style: disc; padding-left: 1.4rem; margin: 0.75rem 0; }
+.prose-vc ol { list-style: decimal; padding-left: 1.5rem; margin: 0.75rem 0; }
+.prose-vc li { margin: 0.3rem 0; }
+.prose-vc li > ul, .prose-vc li > ol { margin: 0.3rem 0; }
+.prose-vc a { color: var(--color-forest-700); text-decoration: underline; text-underline-offset: 2px; }
+.prose-vc strong { color: var(--color-zinc-900); font-weight: 650; }
+.prose-vc code { background: var(--color-zinc-100); border-radius: 0.3rem; padding: 0.1rem 0.35rem; font-size: 0.85em; color: var(--color-forest-900); }
+.prose-vc pre { background: var(--color-zinc-900); color: var(--color-zinc-100); border-radius: 0.6rem; padding: 1rem; overflow-x: auto; font-size: 0.8125rem; line-height: 1.55; margin: 1rem 0; }
+.prose-vc pre code { background: transparent; color: inherit; padding: 0; }
+.prose-vc blockquote { border-left: 3px solid var(--color-gold-400); background: var(--color-gold-100); padding: 0.6rem 1rem; margin: 1rem 0; border-radius: 0 0.5rem 0.5rem 0; color: var(--color-zinc-800); }
+.prose-vc blockquote p { margin: 0.25rem 0; }
+.prose-vc hr { border: 0; border-top: 1px solid var(--color-zinc-200); margin: 2rem 0; }
+.prose-vc table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 0.875rem; margin: 1rem 0; max-width: 100%; }
+.prose-vc th { background: var(--color-zinc-50); text-align: left; font-weight: 650; color: var(--color-zinc-800); white-space: nowrap; }
+.prose-vc th, .prose-vc td { border: 1px solid var(--color-zinc-200); padding: 0.5rem 0.75rem; vertical-align: top; }
+
+@media print {
+    [data-flux-sidebar], [data-flux-header], nav[aria-label="Guides"] { display: none !important; }
+}
