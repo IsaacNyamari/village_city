@@ -6,24 +6,26 @@ APP_DIR="${APP_DIR:-/var/www/village_city}"
 DOMAIN="${DOMAIN:-_}"
 DB_NAME=village_city
 DB_USER=village_city
+PHP_V=8.4   # composer.lock needs PHP >= 8.4.1
 
-if ! command -v php >/dev/null || ! php -r 'exit(PHP_VERSION_ID>=80200?0:1);'; then
-  apt-get update
-  apt-get install -y software-properties-common ca-certificates lsb-release curl unzip
-  # Ubuntu needs the PPA for newer PHP; Debian users: use packages.sury.org instead.
-  add-apt-repository -y ppa:ondrej/php || true
-  apt-get update
+apt-get update
+apt-get install -y software-properties-common ca-certificates lsb-release curl unzip git nginx
+add-apt-repository -y ppa:ondrej/php
+apt-get update
+apt-get install -y php$PHP_V-fpm php$PHP_V-cli php$PHP_V-mysql php$PHP_V-mbstring php$PHP_V-xml \
+  php$PHP_V-curl php$PHP_V-zip php$PHP_V-bcmath php$PHP_V-intl
+update-alternatives --set php /usr/bin/php$PHP_V
+
+# Never replace an existing database server: only install MariaDB if no MySQL/MariaDB is present.
+if ! command -v mysqld >/dev/null && ! command -v mariadbd >/dev/null; then
+  apt-get install -y mariadb-server
 fi
-apt-get install -y nginx mariadb-server unzip curl \
-  php-fpm php-cli php-mysql php-mbstring php-xml php-curl php-zip php-bcmath php-intl
-
-PHP_V=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+systemctl enable --now mariadb 2>/dev/null || systemctl enable --now mysql
 command -v composer >/dev/null || \
   curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 REPO="${REPO:-https://github.com/IsaacNyamari/village_city.git}"
 BRANCH="${BRANCH:-main}"
-apt-get install -y git
 if [ -d "$APP_DIR/.git" ]; then
   git config --global --add safe.directory "$APP_DIR"
   git -C "$APP_DIR" fetch origin "$BRANCH"
