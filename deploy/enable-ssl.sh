@@ -6,8 +6,8 @@ DOMAIN="${DOMAIN:-market.humsols.com}"
 APP_DIR=/var/www/village_city
 EMAIL="${EMAIL:-}"   # optional: EMAIL=you@example.com for expiry notices
 
-IP=$(curl -s -m 10 https://api.ipify.org || hostname -I | awk "{print $1}")
-RES=$(getent hosts "$DOMAIN" | awk "{print $1}" | head -1 || true)
+IP=$(curl -s -m 10 https://api.ipify.org || true)
+RES=$(getent hosts "$DOMAIN" | awk '{print $1}' | head -1 || true)
 [ "$RES" = "$IP" ] || { echo "ERROR: $DOMAIN resolves to '${RES:-nothing}', server is $IP. Fix DNS first."; exit 1; }
 
 apt-get install -y certbot python3-certbot-nginx
