@@ -21,8 +21,18 @@ PHP_V=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
 command -v composer >/dev/null || \
   curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-mkdir -p "$APP_DIR"
-tar -xzf /tmp/village_city.tar.gz -C "$APP_DIR"
+REPO="${REPO:-https://github.com/IsaacNyamari/village_city.git}"
+BRANCH="${BRANCH:-main}"
+apt-get install -y git
+if [ -d "$APP_DIR/.git" ]; then
+  git config --global --add safe.directory "$APP_DIR"
+  git -C "$APP_DIR" fetch origin "$BRANCH"
+  git -C "$APP_DIR" reset --hard "origin/$BRANCH"
+else
+  mkdir -p "$APP_DIR"
+  git clone --branch "$BRANCH" "$REPO" "$APP_DIR"
+  git config --global --add safe.directory "$APP_DIR"
+fi
 cd "$APP_DIR"
 
 # --- database + .env (created once, never overwritten) ---
@@ -48,6 +58,10 @@ if [ ! -f .env ]; then
 else
   composer install --no-dev -o --no-interaction
 fi
+
+# front-end assets (public/build is not in git)
+command -v node >/dev/null || { curl -fsSL https://deb.nodesource.com/setup_20.x | bash - ; apt-get install -y nodejs; }
+npm ci && npm run build
 
 mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache
 php artisan migrate --force --seed
