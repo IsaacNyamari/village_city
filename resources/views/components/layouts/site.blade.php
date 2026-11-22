@@ -4,7 +4,7 @@
 
     // Pages pass a full SEO payload; fall back to a minimal one so the layout never breaks.
     $seo ??= \App\Support\Seo::build(['title' => $title ?: 'Village City', 'description' => $description]);
-    $links = [['Home', route('home'), 'home'], ['Products', route('site.products'), 'site.products*'], ['Sell with us', route('site.sell'), 'site.sell'], ['About', route('site.about'), 'site.about'], ['FAQ', route('site.faq'), 'site.faq'], ['Contact', route('site.contact'), 'site.contact']];
+    $links = [['Home', route('home'), 'home'], ['Products', route('site.products'), 'site.products*'], ['Market today', route('site.market'), 'site.market'], ['Sell with us', route('site.sell'), 'site.sell'], ['About', route('site.about'), 'site.about'], ['FAQ', route('site.faq'), 'site.faq'], ['Contact', route('site.contact'), 'site.contact']];
     $company = \App\Models\Setting::get('company_name', 'Village City');
     $socials = array_filter([
         'Facebook' => \App\Support\Seo::setting('social_facebook'), 'X' => \App\Support\Seo::setting('social_x'), 'Instagram' => \App\Support\Seo::setting('social_instagram'),
