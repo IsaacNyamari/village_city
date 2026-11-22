@@ -40,6 +40,11 @@ class Dispatch extends Model
         return $this->belongsTo(DeliveryRoute::class, 'delivery_route_id');
     }
 
+    public function check(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(DispatchCheck::class);
+    }
+
     public function deliveries(): HasMany
     {
         return $this->hasMany(Delivery::class);

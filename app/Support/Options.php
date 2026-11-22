@@ -75,6 +75,7 @@ class Options
         'completed' => 'green', 'reversed' => 'red', 'scheduled' => 'zinc', 'dispatched' => 'blue', 'in_transit' => 'blue',
         'cancelled' => 'red', 'A' => 'green', 'B' => 'lime', 'C' => 'amber', 'rejected' => 'red',
         'receipt' => 'green', 'sale' => 'blue', 'return' => 'teal', 'transfer_in' => 'sky', 'transfer_out' => 'sky',
+        'certified' => 'green', 'suspended' => 'red', 'expired' => 'red', 'applied' => 'amber', 'vetted' => 'blue', 'trained' => 'sky', 'open' => 'green', 'closed' => 'zinc',
         'adjustment' => 'amber', 'damage' => 'red', 'expiry' => 'red', 'wastage' => 'orange', 'in' => 'green', 'out' => 'red',
     ];
 

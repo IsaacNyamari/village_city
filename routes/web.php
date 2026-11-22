@@ -11,7 +11,8 @@ Route::get('about', [\App\Http\Controllers\SiteController::class, 'about'])->nam
 Route::get('produce', \App\Livewire\Site\Catalogue::class)->name('site.products');
 Route::get('produce/category/{category:slug}', \App\Livewire\Site\CategoryPage::class)->name('site.category');
 Route::get('produce/{product:slug}', \App\Livewire\Site\ProductPage::class)->name('site.product');
-Route::get('faq', \App\Livewire\Site\FaqPage::class)->name('site.faq');
+Route::get('market-today', \App\Livewire\Site\MarketToday::class)->name('site.market');
+Route::get('faq',\App\Livewire\Site\FaqPage::class)->name('site.faq');
 Route::get('contact', \App\Livewire\Site\Contact::class)->name('site.contact');
 Route::get('sell-with-us', \App\Livewire\Site\FarmerSignup::class)->name('site.sell');
 
@@ -35,6 +36,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('procurement/{procurement}', Pages\ProcurementShow::class)->name('procurement.show');
     Route::get('inventory', Pages\Inventory::class)->name('inventory.index');
     Route::get('quality-control', Pages\QualityControl::class)->name('quality.index');
+    Route::get('daily-availability', Pages\DailyListings::class)->name('listings.index');
+    Route::get('inspectors', Pages\Inspectors::class)->name('inspectors.index');
+    Route::get('dispatch-signoff', Pages\DispatchChecks::class)->name('checks.index');
+    Route::get('aggregation', Pages\Aggregation::class)->name('aggregation.index');
+    Route::get('consignments', Pages\Consignments::class)->name('consignments.index');
+    Route::get('fees', Pages\Fees::class)->name('fees.index');
 
     // Commerce
     Route::get('marketplace', Pages\Marketplace::class)->name('marketplace');

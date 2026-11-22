@@ -53,6 +53,7 @@ return [
         'Sales Manager' => ['dashboard.view', 'inquiries.view', 'customers.*', 'orders.view', 'orders.manage', 'marketplace.view', 'invoices.view', 'payments.view', 'products.view', 'inventory.view', 'reports.view', 'intelligence.view'],
         'Warehouse Manager' => ['dashboard.view', 'inventory.*', 'centres.*', 'products.view', 'procurement.view', 'quality.view', 'orders.view', 'logistics.view'],
         'Quality Control Officer' => ['dashboard.view', 'quality.*', 'procurement.view', 'inventory.view', 'products.view'],
+        'Quality Inspector' => ['dashboard.view', 'quality.*', 'logistics.view', 'centres.view', 'inventory.view', 'products.view', 'orders.view'],
         'Content & SEO Manager' => ['dashboard.view', 'seo.manage', 'inquiries.view', 'products.view'],
         'Customer' => ['marketplace.view', 'orders.own'],
         'Farmer' => [],
@@ -72,6 +73,9 @@ return [
             ['Procurement', 'procurement.index', 'clipboard-document-list', 'procurement.view'],
             ['Inventory', 'inventory.index', 'archive-box', 'inventory.view'],
             ['Quality Control', 'quality.index', 'clipboard-document-check', 'quality.view'],
+            ['Daily Availability', 'listings.index', 'sun', 'inventory.view'],
+            ['Quality Inspectors', 'inspectors.index', 'shield-check', 'quality.view'],
+            ['Dispatch Sign-off', 'checks.index', 'check-badge', 'quality.view'],
         ],
         'Commerce' => [
             ['Marketplace', 'marketplace', 'shopping-bag', 'marketplace.view'],
@@ -80,6 +84,7 @@ return [
             ['Sales', 'sales.index', 'presentation-chart-line', 'orders.view'],
             ['Invoices', 'invoices.index', 'document-text', 'invoices.view'],
             ['Payments', 'payments.index', 'credit-card', 'payments.view'],
+            ['Order Aggregation', 'aggregation.index', 'rectangle-stack', 'orders.view'],
         ],
         'Logistics' => [
             ['Vehicles', 'vehicles.index', 'truck', 'logistics.view'],
@@ -87,10 +92,12 @@ return [
             ['Dispatch', 'dispatches.index', 'paper-airplane', 'logistics.view'],
             ['Deliveries', 'deliveries.index', 'map-pin', 'logistics.view'],
             ['Routes', 'routes.index', 'map', 'logistics.view'],
+            ['Consignment Tracking', 'consignments.index', 'eye', 'logistics.view'],
         ],
         'Finance' => [
             ['Expenses', 'expenses.index', 'receipt-percent', 'expenses.view'],
             ['Supplier Settlements', 'settlements.index', 'banknotes', 'settlements.view'],
+            ['Fees & Pay Timing', 'fees.index', 'currency-dollar', 'settlements.view'],
             ['Financial Transactions', 'transactions.index', 'arrows-right-left', 'finance.view'],
             ['Reports', 'reports.index', 'chart-bar', 'reports.view'],
         ],

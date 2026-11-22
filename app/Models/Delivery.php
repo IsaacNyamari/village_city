@@ -26,6 +26,13 @@ class Delivery extends Model
         'delivered_at' => 'datetime',
     ];
 
+    public const LAST_MILE = ['own' => 'Own van / rider', 'uber' => 'Uber', 'bolt' => 'Bolt', 'boda' => 'Boda boda'];
+
+    protected static function booted(): void
+    {
+        static::creating(fn (self $d) => $d->parcel_code ??= strtoupper(\Illuminate\Support\Str::random(6)));
+    }
+
     public function dispatch(): BelongsTo
     {
         return $this->belongsTo(Dispatch::class);

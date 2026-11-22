@@ -37,7 +37,20 @@
                     'Actual delivery' => $d->delivered_at?->format('d M Y H:i'),
                     'Recipient' => trim($d->recipient_name.' '.$d->recipient_phone),
                     'Delivery notes' => $d->notes,
+                    'Parcel code' => $d->parcel_code,
+                    'Last-mile' => $d->last_mile_provider ? (\App\Models\Delivery::LAST_MILE[$d->last_mile_provider] ?? $d->last_mile_provider).' · '.trim($d->rider_name.' '.$d->rider_phone) : null,
                 ]" />
+                @can('logistics.manage')
+                    <form wire:submit="saveLastMile" class="mt-4 grid gap-3 border-t border-zinc-200 pt-4 sm:grid-cols-4">
+                        <flux:select wire:model="lastMile.provider" label="Last-mile by">
+                            <flux:select.option value="">— none —</flux:select.option>
+                            @foreach (\App\Models\Delivery::LAST_MILE as $k => $v)<flux:select.option value="{{ $k }}">{{ $v }}</flux:select.option>@endforeach
+                        </flux:select>
+                        <flux:input wire:model="lastMile.rider_name" label="Rider / driver" />
+                        <flux:input wire:model="lastMile.rider_phone" label="Rider phone" />
+                        <div class="flex items-end"><flux:button type="submit" size="sm">Save hand-off</flux:button></div>
+                    </form>
+                @endcan
                 @if ($d->pod_path)
                     <div class="mt-4">
                         <flux:button size="sm" icon="document-check" href="{{ Storage::disk('public')->url($d->pod_path) }}" target="_blank">View proof of delivery</flux:button>

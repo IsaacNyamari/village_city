@@ -23,10 +23,30 @@ class DeliveryShow extends Component
 
     public $proof = null;
 
+    public array $lastMile = ['provider' => '', 'rider_name' => '', 'rider_phone' => ''];
+
     public function mount(Delivery $delivery): void
     {
         $this->guard('logistics.view');
         $this->delivery = $delivery;
+        $this->lastMile = ['provider' => (string) $delivery->last_mile_provider, 'rider_name' => (string) $delivery->rider_name, 'rider_phone' => (string) $delivery->rider_phone];
+    }
+
+    public function saveLastMile(): void
+    {
+        $this->guard('logistics.manage');
+        $this->validate([
+            'lastMile.provider' => ['nullable', 'in:'.implode(',', array_keys(Delivery::LAST_MILE))],
+            'lastMile.rider_name' => ['nullable', 'string', 'max:255'],
+            'lastMile.rider_phone' => ['nullable', 'string', 'max:30'],
+        ]);
+
+        $this->delivery->update([
+            'last_mile_provider' => $this->lastMile['provider'] ?: null,
+            'rider_name' => $this->lastMile['rider_name'] ?: null,
+            'rider_phone' => $this->lastMile['rider_phone'] ?: null,
+        ]);
+        $this->toast('Last-mile hand-off saved.');
     }
 
     public function open(string $to): void

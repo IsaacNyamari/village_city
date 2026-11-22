@@ -14,6 +14,11 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function centre(): BelongsTo
+    {
+        return $this->belongsTo(CollectionCentre::class, 'collection_centre_id');
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

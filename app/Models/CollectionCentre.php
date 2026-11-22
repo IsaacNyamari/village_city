@@ -59,4 +59,22 @@ class CollectionCentre extends Model
     {
         return $this->hasMany(Dispatch::class);
     }
+
+    public function inspector(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'inspector_id');
+    }
+
+    public function listings(): HasMany
+    {
+        return $this->hasMany(DailyListing::class);
+    }
+
+    /** Market days are stored as text such as "Mon, Thu"; matched on the first three letters. Blank = trades daily. */
+    public function isMarketDay(?\Illuminate\Support\Carbon $date = null): bool
+    {
+        $day = strtolower(($date ?? today())->format('D'));
+
+        return blank($this->market_days) || str_contains(strtolower($this->market_days), $day);
+    }
 }

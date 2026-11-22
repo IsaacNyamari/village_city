@@ -88,6 +88,10 @@ class Centres extends ResourcePage
             'manager_id' => ['label' => 'Manager', 'type' => 'select', 'options' => $staff, 'rules' => ['nullable', 'exists:users,id']],
             'contact_phone' => ['label' => 'Contact number', 'rules' => ['nullable', 'string', 'max:30']],
             'capacity_kg' => ['label' => 'Capacity (kg)', 'type' => 'number', 'rules' => ['nullable', 'numeric', 'min:0']],
+            'market_days' => ['label' => 'Market days', 'placeholder' => 'Mon, Thu', 'help' => 'Days this centre trades. Blank = every day.', 'rules' => ['nullable', 'string', 'max:60']],
+            'listing_opens_at' => ['label' => 'Daily listing opens at', 'type' => 'time', 'default' => '00:30', 'rules' => ['nullable', 'date_format:H:i,H:i:s']],
+            'order_cutoff_time' => ['label' => 'Order cut-off', 'type' => 'time', 'default' => '18:00', 'rules' => ['nullable', 'date_format:H:i,H:i:s']],
+            'inspector_id' => ['label' => 'Quality inspector', 'type' => 'select', 'options' => $staff, 'rules' => ['nullable', 'exists:users,id']],
             'status' => ['label' => 'Status', 'type' => 'select', 'required' => true, 'default' => 'active', 'options' => Options::STATUS, 'rules' => ['required', 'in:active,inactive']],
             'officer_ids' => ['label' => 'Assigned officers', 'type' => 'checkboxes', 'relation' => 'officers', 'options' => $staff, 'rules' => ['array']],
         ];

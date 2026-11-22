@@ -75,6 +75,14 @@ class LogisticsService
                 throw new RuntimeException('Assign a vehicle before dispatching.');
             }
 
+            if (! $dispatch->vehicle->isCertified()) {
+                throw new RuntimeException('Vehicle '.$dispatch->vehicle->registration.' is not certified (or its certification has expired).');
+            }
+
+            if (! $dispatch->check?->passed()) {
+                throw new RuntimeException('The quality inspector must complete the dispatch sign-off before this load can depart.');
+            }
+
             $dispatch->update(['status' => 'dispatched', 'departure_at' => $dispatch->departure_at ?? now()]);
             $dispatch->vehicle?->update(['status' => 'on_trip']);
 
@@ -97,6 +105,11 @@ class LogisticsService
                     'payment_method' => 'cash',
                     'dispatch_id' => $dispatch->id,
                 ]);
+            }
+
+            // Heads-up for the destination: the hub / centre manager and inspector.
+            foreach (array_filter([$dispatch->centre->manager, $dispatch->centre->inspector]) as $person) {
+                Notifier::send([], 'Load '.$dispatch->reference.' has left '.$dispatch->centre->name, 'Vehicle '.$dispatch->vehicle->registration.', driver '.$dispatch->driver_name.'. Expected '.($dispatch->expected_arrival_at?->format('d M H:i') ?? 'soon').'.', route('consignments.index'), 'truck', null, $person);
             }
 
             Notifier::send('logistics.view', 'Dispatch '.$dispatch->reference.' departed', $dispatch->deliveries()->count().' delivery(ies) left '.$dispatch->centre->name.'.', route('dispatches.index'), 'truck');
