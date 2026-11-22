@@ -16,6 +16,9 @@ Route::get('faq',\App\Livewire\Site\FaqPage::class)->name('site.faq');
 Route::get('contact', \App\Livewire\Site\Contact::class)->name('site.contact');
 Route::get('sell-with-us', \App\Livewire\Site\FarmerSignup::class)->name('site.sell');
 
+// GitHub push webhook for auto-deploy (HMAC-verified; inert unless DEPLOY_WEBHOOK_SECRET is set)
+Route::post('deploy/webhook', \App\Http\Controllers\DeployWebhookController::class)->name('deploy.webhook');
+
 // Search engine files
 Route::get('sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('seo.sitemap');
 Route::get('robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('seo.robots');

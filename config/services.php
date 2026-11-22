@@ -49,4 +49,9 @@ return [
         'backoff_ms' => (int) env('GEMINI_BACKOFF_MS', 700),
     ],
 
+    'deploy' => [
+        'secret' => env('DEPLOY_WEBHOOK_SECRET'),
+        'branch' => env('DEPLOY_BRANCH', 'main'),
+    ],
+
 ];
